@@ -1,0 +1,51 @@
+# Microservice : auth-service (Spring Boot) + db-auth (MySQL)
+# Standalone : docker compose up
+# Le reseau "moustass-shared" doit exister (cree par le compose racine
+# ou via : docker network create moustass-shared)
+
+services:
+  db-auth:
+    image: mysql:8.0
+    container_name: db_auth
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: db_auth
+      MYSQL_USER: auth_user
+      MYSQL_PASSWORD: auth_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_auth_data:/var/lib/mysql
+    networks:
+      - auth-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  auth-service:
+    build: .
+    container_name: auth_service
+    ports:
+      - "8000:8000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-auth:3306/db_auth?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: auth_user
+      SPRING_DATASOURCE_PASSWORD: auth_pass
+      APP_SMK: moustass2024key!
+      JWT_SECRET: moustass2024jwtsecretkeylongenough32chars
+      ADMIN_REGISTRATION_CODE: MOUSTASS-ADMIN-2026
+    depends_on:
+      db-auth:
+        condition: service_healthy
+    networks:
+      - auth-network
+      - moustass-shared
+
+volumes:
+  db_auth_data:
+
+networks:
+  auth-network:
+  moustass-shared:
+    name: moustass-shared

@@ -1,0 +1,22 @@
+# Orchestrateur racine — architecture microservice
+# Inclut les 4 microservices independants. Chaque service garde
+# sa propre DB isolee + un reseau prive, et publie uniquement ce qui
+# doit etre joignable par les autres via "moustass-shared".
+#
+# Usage :
+#   - Tout en meme temps :     docker compose up -d
+#   - Un seul service :        cd <service>/ && docker compose up -d
+#                              (n'oubliez pas : docker network create moustass-shared)
+#
+# Chaque sous-fichier (backend, audio-service, billing-service, frontend)
+# peut etre lance, build, redeploye independamment.
+
+include:
+  - path: ./backend/docker-compose.yml
+  - path: ./audio-service/docker-compose.yml
+  - path: ./billing-service/docker-compose.yml
+  - path: ./frontend/docker-compose.yml
+
+# Le reseau partage "moustass-shared" est defini dans chaque sous-fichier
+# (avec un name explicite identique). Compose les fusionne automatiquement
+# par nom lorsque les fichiers sont assembles via "include".

@@ -1,0 +1,52 @@
+# Microservice : audio-service (Laravel) + db-audio (MySQL)
+# Standalone : docker compose up
+# Suppose que auth-service tourne sur le reseau "moustass-shared"
+# (cree par le compose racine ou via : docker network create moustass-shared)
+
+services:
+  db-audio:
+    image: mysql:8.0
+    container_name: db_audio
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: db_audio
+      MYSQL_USER: audio_user
+      MYSQL_PASSWORD: audio_pass
+    ports:
+      - "3308:3306"
+    volumes:
+      - db_audio_data:/var/lib/mysql
+    networks:
+      - audio-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  audio-service:
+    build: .
+    container_name: audio_service
+    ports:
+      - "8001:8000"
+    environment:
+      DB_HOST: db-audio
+      DB_DATABASE: db_audio
+      DB_USERNAME: audio_user
+      DB_PASSWORD: audio_pass
+      AUTH_SERVICE_URL: http://auth-service:8000
+      AUDIO_ENCRYPTION_KEY: moustass2024audiokey!
+      APP_KEY: base64:dGVzdGtleW11c3RiZTMyY2hhcmFjdGVyc2xvbmc=
+    depends_on:
+      db-audio:
+        condition: service_healthy
+    networks:
+      - audio-network
+      - moustass-shared
+
+volumes:
+  db_audio_data:
+
+networks:
+  audio-network:
+  moustass-shared:
+    name: moustass-shared

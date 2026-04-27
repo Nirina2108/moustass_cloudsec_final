@@ -1,0 +1,47 @@
+@import './LoginPage.css';
+
+.register-strength {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+    padding: 12px 14px;
+    background-color: var(--bg-base);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+}
+
+.register-strength-bar {
+    flex: 1;
+    height: 8px;
+    background-color: var(--bg-elevated);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.register-strength-fill {
+    height: 100%;
+    min-width: 4px;
+    transition: width 0.25s ease, background-color 0.25s ease;
+    border-radius: 4px;
+    box-shadow: 0 0 12px currentColor;
+    opacity: 0.95;
+}
+
+.register-strength-label {
+    font-size: 13px;
+    font-weight: 700;
+    min-width: 100px;
+    text-align: right;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 12px currentColor;
+}
+
+.register-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    padding: 0 4px;
+    margin-top: -4px;
+}

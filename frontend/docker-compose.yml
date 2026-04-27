@@ -1,0 +1,18 @@
+# Microservice : frontend (React/Vite + Nginx)
+# Standalone : docker compose up
+# Suppose que auth-service, audio-service, billing-service tournent
+# sur le reseau "moustass-shared"
+# (cree par le compose racine ou via : docker network create moustass-shared)
+
+services:
+  frontend:
+    build: .
+    container_name: frontend
+    ports:
+      - "3000:80"
+    networks:
+      - moustass-shared
+
+networks:
+  moustass-shared:
+    name: moustass-shared

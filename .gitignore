@@ -1,0 +1,27 @@
+# Backend Java
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+
+# Laravel
+audio-service/vendor/
+audio-service/.env
+billing-service/vendor/
+billing-service/.env
+
+# React
+frontend/node_modules/
+frontend/dist/
+
+# Docker
+.env
+
+# Logs
+*.log
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.iml

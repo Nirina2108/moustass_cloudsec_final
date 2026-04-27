@@ -1,0 +1,51 @@
+# Microservice : billing-service (Laravel) + db-billing (MySQL)
+# Standalone : docker compose up
+# Suppose que auth-service tourne sur le reseau "moustass-shared"
+# (cree par le compose racine ou via : docker network create moustass-shared)
+
+services:
+  db-billing:
+    image: mysql:8.0
+    container_name: db_billing
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: db_billing
+      MYSQL_USER: billing_user
+      MYSQL_PASSWORD: billing_pass
+    ports:
+      - "3309:3306"
+    volumes:
+      - db_billing_data:/var/lib/mysql
+    networks:
+      - billing-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  billing-service:
+    build: .
+    container_name: billing_service
+    ports:
+      - "8002:8000"
+    environment:
+      DB_HOST: db-billing
+      DB_DATABASE: db_billing
+      DB_USERNAME: billing_user
+      DB_PASSWORD: billing_pass
+      AUTH_SERVICE_URL: http://auth-service:8000
+      APP_KEY: base64:dGVzdGtleW11c3RiZTMyY2hhcmFjdGVyc2xvbmc=
+    depends_on:
+      db-billing:
+        condition: service_healthy
+    networks:
+      - billing-network
+      - moustass-shared
+
+volumes:
+  db_billing_data:
+
+networks:
+  billing-network:
+  moustass-shared:
+    name: moustass-shared
