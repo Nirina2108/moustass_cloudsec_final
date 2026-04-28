@@ -76,6 +76,13 @@ public class AuthService {
     private String adminRegistrationCodeDefault;
 
     /**
+     * Active la promotion automatique du premier user en admin
+     * (true en prod pour le bootstrap initial, false en test).
+     */
+    @Value("${app.admin.bootstrap-first-user:true}")
+    private boolean bootstrapFirstUser;
+
+    /**
      * Cle de configuration pour le code d inscription admin.
      */
     public static final String SETTING_ADMIN_REGISTRATION_CODE = "admin.registration-code";
@@ -182,7 +189,7 @@ public class AuthService {
             return response;
         }
 
-        boolean firstUser = userRepository.count() == 0;
+        boolean firstUser = bootstrapFirstUser && userRepository.count() == 0;
         boolean wantAdmin = request.isAdmin();
 
         if (wantAdmin && !firstUser) {
