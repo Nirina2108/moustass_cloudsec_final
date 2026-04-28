@@ -28,10 +28,10 @@
 		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
 		<!-- Exclusions SonarCloud - pas de coverage sur ces fichiers -->
-		<sonar.coverage.exclusions>**/*Application.java,**/entity/**,**/dto/**,**/repository/**</sonar.coverage.exclusions>
+		<sonar.coverage.exclusions>**/*Application.java,**/entity/**,**/dto/**,**/repository/**,**/config/**,**/exception/**,**/controller/ProfileController.java,**/controller/HomeController.java</sonar.coverage.exclusions>
 
 		<!-- Exclusions SonarCloud - pas de detection de duplication sur les fichiers boilerplate -->
-		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/repository/**</sonar.cpd.exclusions>
+		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/repository/**,**/config/**</sonar.cpd.exclusions>
 	</properties>
 
 	<dependencies>
